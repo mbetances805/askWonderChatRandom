@@ -1,33 +1,24 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Router} from 'react-router'
-import {Route, Switch} from 'react-router-dom'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Router } from 'react-router'
+import { Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import history from './history'
-import {Main} from './components'
+import { Main, ChatRoom } from './components'
 
 class Routes extends Component {
-  componentDidMount () {
-
-  }
-
   render () {
-
     return (
       <Router history={history}>
-        <Main>
-          <Switch>
-            <Route path='/home' component={Main} />
-          </Switch>
-        </Main>
+        <Switch>
+          <Route path='/home' component={Main} />
+          <Route path='/chatRoom' component={ChatRoom} />
+        </Switch>
       </Router>
     )
   }
 }
 
-/**
- * CONTAINER
- */
 const mapState = null
 
 const mapDispatch = null

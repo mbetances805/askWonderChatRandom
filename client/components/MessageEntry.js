@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 class MessageEntry extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       text: ''
@@ -12,35 +12,31 @@ class MessageEntry extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentDidMount() {
+  componentDidMount () {
 
   }
 
-  handleSubmit = (evt) => {
+  handleSubmit (evt) {
     evt.preventDefault()
   }
 
-  handleChange(evt) {
+  handleChange (evt) {
 
   }
 
-  render() {
+  render () {
     const {text} = this.state
     return (
-      <form id="new-message-form" onSubmit={this.handleSubmit}>
-        <div className="input-group input-group-lg row">
-          <input
-            className="form-control"
-            type="text"
-            name="text"
-            value={text}
-            onChange={this.handleChange}
-            placeholder="Say something nice..."
-          />
-          <span className="">
-            <button className="black" type="submit">Chat!</button>
-          </span>
-        </div>
+      <form id='form-and-button-container' onSubmit={this.handleSubmit}>
+        <input
+          className='form-control'
+          type='text'
+          name='text'
+          value={text}
+          onChange={this.handleChange}
+          placeholder='Say something nice...'
+        />
+        <button className='chat-button' type='submit'>Chat!</button>
       </form>
     )
   }

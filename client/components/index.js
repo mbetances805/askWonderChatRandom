@@ -6,3 +6,5 @@
 export {default as Main} from './Main'
 export {default as MessageEntry} from './MessageEntry'
 export {default as MessagesList} from './MessagesList'
+export {default as UserNameEntry} from './UserNameEntry'
+export {default as ChatRoom} from './ChatRoom'

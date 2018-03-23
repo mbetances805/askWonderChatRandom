@@ -2,21 +2,23 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
-import {MessageEntry, MessagesList} from './index.js'
+import {UserNameEntry} from './index'
 
 const Main = (props) => {
 
   return (
-    <div>
-      <h1>Chat Random</h1>
-      <nav>
-        <div>
-          <Link to='/home'>Home </Link>
-        </div>
-      </nav>
-      <hr />
-      <MessagesList />
-      <MessageEntry />
+    <div id='polygon-container'>
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        viewBox='0 0 100 100'
+        preserveAspectRatio='none'
+      >
+        <polygon
+          fill='white'
+          points='0,100 100,0 100,100'
+        />
+      </svg>
+      <UserNameEntry />
     </div>
   )
 }
