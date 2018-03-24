@@ -1,21 +1,26 @@
-import axios from 'axios'
-
-const defaultUser = {}
+import socket from '../socket'
 
 const CREATE_USER = 'CREATE_USER'
+const GET_USER = 'GET_USER'
 
 export const createUser = user => ({ type: CREATE_USER, user })
+export const getUser = () => ({ type: GET_USER })
 
 export const postUser = (userName) =>
-  dispatch =>
-    axios.post(`/user/${userName}`, userName)
-      .then(res => { console.log('username axios.post', userName); dispatch(createUser(res.data)) })
-      .catch(error => console.log(error))
+  dispatch => { dispatch(createUser(userName)); socket.emit('new-user', userName) }
 
-export default function (state = defaultUser, action) {
+export const fetchUser = dispatch => {
+  dispatch(getUser())
+}
+
+export default function (state = [], action) {
   switch (action.type) {
     case CREATE_USER:
-      return action.user
+      return [...state.concat(action.user)]
+
+    case GET_USER:
+      return [...state]
+
     default:
       return state
   }

@@ -1,25 +1,38 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
-import {MessageEntry, MessagesList} from './index'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { MessageEntry, MessagesList } from './index'
+import { getUser } from '../store'
 
-const ChatRoom = () => {
-  return (
-    <div className='chat-box'>
-      <div className='chat-message-list'>
-        <MessagesList />
+class ChatRoom extends Component {
+  componentDidMount () {
+    this.props.fetchUser()
+  }
+
+  render () {
+    return (
+      <div className='chat-box'>
+        <div className='chat-message-list'>
+          <MessagesList userName={this.props.user} />
+        </div>
+        <div className='chat-message-entry'>
+          <MessageEntry />
+        </div>
       </div>
-      <div className='chat-message-entry'>
-        <MessageEntry />
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
-const mapState = null
+const mapState = state => ({
+  user: state.user[0]
+})
 
-const mapDispatch = null
+const mapDispatch = dispatch => ({
+  fetchUser: () => {
+    dispatch(getUser())
+  }
+})
 
 export default withRouter(connect(mapState, mapDispatch)(ChatRoom))
 

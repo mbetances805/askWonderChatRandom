@@ -12,7 +12,7 @@ const RedisStore = require('connect-redis')(session)
 const cookieParser = require('cookie-parser')
 const client = redis.createClient() // creates a new client
 
-module.exports = app
+module.exports = {app, client}
 
 if (process.env.NODE_ENV !== 'production') require('../secrets')
 
@@ -90,11 +90,11 @@ const connectRedis = () => {
   })
 }
 
-client.set('foo', 'hi', redis.print)
-client.get('foo', function (error, reply) {
-  if (error) throw error
-  console.log(reply.toString())
-})
+// client.set('foo', 'hi', redis.print)
+// client.get('foo', function (error, reply) {
+//   if (error) throw error
+//   console.log(reply.toString())
+// })
 
 // if (redis.call('get', KEYS[1] == ARGV[1]) {
 //   return redis.call('get', KEYS[1])

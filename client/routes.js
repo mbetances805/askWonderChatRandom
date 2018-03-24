@@ -12,7 +12,7 @@ class Routes extends Component {
       <Router history={history}>
         <Switch>
           <Route path='/home' component={Main} />
-          <Route path='/chatRoom' component={ChatRoom} />
+          <Route path='/chatRoom/:roomId' component={ChatRoom} />
         </Switch>
       </Router>
     )

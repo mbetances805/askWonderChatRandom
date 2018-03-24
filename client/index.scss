@@ -45,6 +45,10 @@ body {
     width: 100%;
     height: 60px;
   }
+
+  ul {
+    list-style-type: none;
+  }
 }
 
 ::placeholder {
@@ -89,6 +93,7 @@ body {
   width: 600px;
   grid-column: 2;
   grid-row: 1;
+  overflow: scroll;
 }
 
 .chat-message-entry {

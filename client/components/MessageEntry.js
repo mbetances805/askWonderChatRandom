@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import { addMessage } from '../store'
 
 class MessageEntry extends Component {
   constructor (props) {
@@ -12,16 +13,14 @@ class MessageEntry extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentDidMount () {
-
-  }
-
   handleSubmit (evt) {
     evt.preventDefault()
+    this.props.postMessage(this.state.text)
+    this.setState({text: ''})
   }
 
   handleChange (evt) {
-
+    this.setState({text: evt.target.value})
   }
 
   render () {
@@ -44,6 +43,10 @@ class MessageEntry extends Component {
 
 const mapState = null
 
-const mapDispatch = null
+const mapDispatch = dispatch => ({
+  postMessage: (message) => {
+    dispatch(addMessage(message))
+  }
+})
 
 export default withRouter(connect(mapState, mapDispatch)(MessageEntry))

@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
-import {postUser} from '../store'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { postUser } from '../store'
 import history from '../history'
 
 class UserNameEntry extends Component {
@@ -17,9 +17,9 @@ class UserNameEntry extends Component {
 
   handleSubmit (evt) {
     evt.preventDefault()
+    let roomId = this.state.text + (Math.floor(Math.random() * 10000))
+    history.push(`/chatRoom/${roomId}`)
     this.props.createUser(this.state.text)
-    this.setState({text: ''})
-    history.push('/chatRoom')
   }
 
   handleChange (evt) {
