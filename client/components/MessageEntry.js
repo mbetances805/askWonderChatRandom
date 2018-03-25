@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import { addMessage } from '../store'
+import { showMessage } from '../store'
 
 class MessageEntry extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      text: ''
+      message: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -15,27 +15,35 @@ class MessageEntry extends Component {
 
   handleSubmit (evt) {
     evt.preventDefault()
-    this.props.postMessage(this.state.text)
-    this.setState({text: ''})
+    const {message} = this.state
+    const updatedMessage = {message}
+    updatedMessage.user = this.props.user
+    console.log('updatedMessage', updatedMessage)
+    this.props.sendMessage(updatedMessage)
+    this.setState({message: ''})
   }
 
   handleChange (evt) {
-    this.setState({text: evt.target.value})
+    this.setState({message: evt.target.value})
   }
 
   render () {
-    const {text} = this.state
+    const {message} = this.state
+    console.log('this.props.user.pairing', this.props.user.pairing)
     return (
       <form id='form-and-button-container' onSubmit={this.handleSubmit}>
         <input
           className='form-control'
           type='text'
-          name='text'
-          value={text}
+          name='message'
+          value={message}
           onChange={this.handleChange}
           placeholder='Say something nice...'
         />
-        <button className='chat-button' type='submit'>Chat!</button>
+        {
+          this.props.user.pairing ? <button className='chat-button' type='submit'>Chat!</button>
+          : <button className='chat-button' type='submit' disabled>Chat!</button>
+        }
       </form>
     )
   }
@@ -44,8 +52,8 @@ class MessageEntry extends Component {
 const mapState = null
 
 const mapDispatch = dispatch => ({
-  postMessage: (message) => {
-    dispatch(addMessage(message))
+  sendMessage: (message) => {
+    dispatch(showMessage(message))
   }
 })
 

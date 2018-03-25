@@ -4,24 +4,18 @@ import { withRouter } from 'react-router'
 import { getMessages } from '../store'
 
 class MessagesList extends Component {
-  componentDidUpdate (prevProps, prevState) {
-    if (prevProps.messages !== this.props.messages) {
-      this.props.fetchMessages()
-    }
+  componentDidMount () {
+    this.props.fetchMessages()
   }
 
   render () {
     let keyId = 0
     let time = new Date()
-    console.log("this.props", this.props)
+    console.log('this.props.messages', this.props.messages)
+
     return (
       <div id='live-chat'>
         <ul className='collection'>
-          {/* <li className='collection-item avatar chat-list' key={1}>
-            <img alt='' className='circle' />
-            <span className='title'><b>SamSam</b></span>
-            <p>Hi, Im interested in chatting</p>
-          </li>*/}
           {
            this.props.messages.map(message => {
              return (
@@ -33,9 +27,9 @@ class MessagesList extends Component {
                    height='25px'
                    className='circle-avatar'
                  />
-                 <span className='user'><b>{this.props.userName}</b></span>
+                 <span className='user'><b>{message.user.userName}</b></span>
                  <div className='time'>{time.toLocaleString()}</div>
-                 <p>{message}</p>
+                 <p>{message.message}</p>
                </li>
              )
            })
