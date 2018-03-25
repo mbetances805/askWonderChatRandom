@@ -17,9 +17,14 @@ class UserNameEntry extends Component {
 
   handleSubmit (evt) {
     evt.preventDefault()
-    let roomId = this.state.text + (Math.floor(Math.random() * 10000))
-    history.push(`/chatRoom/${roomId}`)
-    this.props.createUser(this.state.text)
+    if (this.state.text === '') {
+      let warningElement = document.getElementById('warning')
+      warningElement.innerHTML = 'Please enter a username'
+    } else {
+      let roomId = this.state.text + (Math.floor(Math.random() * 10000))
+      history.push(`/chatRoom/${roomId}`)
+      this.props.createUser(this.state.text)
+    }
   }
 
   handleChange (evt) {
@@ -44,6 +49,7 @@ class UserNameEntry extends Component {
               />
               <button className='submit-button' type='submit'>Submit</button>
             </div>
+            <div id='warning'></div>
           </form>
         </section>
       </div>

@@ -3,22 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { MessageEntry, MessagesList } from './index'
-import { fetchUser, updateStatus } from '../store'
 
 class ChatRoom extends Component {
-  componentDidMount () {
-    this.props.getUser()
-    console.log('chatRoom', this.props.user)
-  }
-
-  componentDidUpdate (prevProps) {
-    let {socketId} = this.props.user
-    let {pairing} = this.props.user
-    if (prevProps.user.pairing !== pairing) {
-      this.props.checkPairing(socketId, pairing)
-    }
-  }
-
   render () {
     return (
       <div className='chat-box'>
@@ -41,14 +27,7 @@ const mapState = state => ({
   user: state.user
 })
 
-const mapDispatch = dispatch => ({
-  getUser: () => {
-    dispatch(fetchUser())
-  },
-  checkPairing: (socketId, status) => {
-    dispatch(updateStatus(socketId, status))
-  }
-})
+const mapDispatch = null
 
 export default withRouter(connect(mapState, mapDispatch)(ChatRoom))
 

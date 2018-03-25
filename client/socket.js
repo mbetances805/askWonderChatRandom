@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
-import store, { displayMessage, createUser, getPairing,
-  updatePairing } from './store'
+import store, { displayMessage, updatePairing,
+  hopPairing, clearMessages } from './store'
 
 const socket = io(window.location.origin)
 
@@ -10,13 +10,17 @@ socket.on('connect', () => {
 
 socket.on('join-room', (userName, status) => {
   console.log('Joining new room!')
-  store.dispatch(createUser(userName))
-  store.dispatch(getPairing(status))
 })
 
 socket.on('check-pairing', (socketId, status) => {
   console.log('checking pairing status')
   store.dispatch(updatePairing(socketId, status))
+})
+
+socket.on('hop-pairing', (socketId, status) => {
+  console.log('changing pairs and pairing status')
+  store.dispatch(hopPairing(socketId, status))
+  store.dispatch(clearMessages())
 })
 
 socket.on('new-message', messageDetails => {

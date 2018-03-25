@@ -15,12 +15,17 @@ class MessageEntry extends Component {
 
   handleSubmit (evt) {
     evt.preventDefault()
-    const {message} = this.state
-    const updatedMessage = {message}
-    updatedMessage.user = this.props.user
-    console.log('updatedMessage', updatedMessage)
-    this.props.sendMessage(updatedMessage)
-    this.setState({message: ''})
+    let warningElement = document.getElementById('warning')
+    if (this.state.message === '') {
+      warningElement.innerHTML = 'Please enter a message'
+    } else {
+      warningElement.innerHTML = ''
+      const {message} = this.state
+      const updatedMessage = {message}
+      updatedMessage.user = this.props.user
+      this.props.sendMessage(updatedMessage)
+      this.setState({message: ''})
+    }
   }
 
   handleChange (evt) {
@@ -29,7 +34,6 @@ class MessageEntry extends Component {
 
   render () {
     const {message} = this.state
-    console.log('this.props.user.pairing', this.props.user.pairing)
     return (
       <form id='form-and-button-container' onSubmit={this.handleSubmit}>
         <input
@@ -44,6 +48,7 @@ class MessageEntry extends Component {
           this.props.user.pairing ? <button className='chat-button' type='submit'>Chat!</button>
           : <button className='chat-button' type='submit' disabled>Chat!</button>
         }
+        <div id='warning'></div>
       </form>
     )
   }
