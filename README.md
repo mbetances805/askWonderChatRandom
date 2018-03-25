@@ -18,3 +18,6 @@
 - run `npm install` to install packages
 - run `npm run start-dev`
 - open `localhost:8080/home` in browser
+
+## Screenshots
+See screenshots in `screenShots` directory
