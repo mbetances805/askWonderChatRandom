@@ -12597,6 +12597,8 @@ var MessagesList = function (_Component) {
   _createClass(MessagesList, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var keyId = 0;
       var time = new Date();
 
@@ -12607,9 +12609,15 @@ var MessagesList = function (_Component) {
           'ul',
           { className: 'collection' },
           this.props.messages.map(function (message) {
-            return _react2.default.createElement(
+            return _this2.props.user.userName === message.user.userName ? _react2.default.createElement(
               'li',
-              { className: 'collection-item avatar chat-list', key: keyId++ },
+              { className: 'chat-list-primary', key: keyId++ },
+              _react2.default.createElement('img', {
+                className: 'chat-avatar-image',
+                src: 'https://image.flaticon.com/icons/svg/270/270094.svg',
+                width: '25px',
+                height: '25px'
+              }),
               _react2.default.createElement(
                 'span',
                 { className: 'user' },
@@ -12620,13 +12628,41 @@ var MessagesList = function (_Component) {
                 )
               ),
               _react2.default.createElement(
-                'div',
+                'p',
                 { className: 'time' },
-                time.toLocaleString()
+                time.toLocaleString().slice(10)
               ),
               _react2.default.createElement(
                 'p',
-                null,
+                { className: 'message' },
+                message.message
+              )
+            ) : _react2.default.createElement(
+              'li',
+              { className: 'chat-list-secondary', key: keyId++ },
+              _react2.default.createElement(
+                'span',
+                { className: 'user' },
+                _react2.default.createElement(
+                  'b',
+                  null,
+                  message.user.userName
+                )
+              ),
+              _react2.default.createElement('img', {
+                className: 'chat-avatar-image',
+                src: 'https://image.flaticon.com/icons/svg/270/270098.svg',
+                width: '25px',
+                height: '25px'
+              }),
+              _react2.default.createElement(
+                'p',
+                { className: 'time' },
+                time.toLocaleString().slice(10)
+              ),
+              _react2.default.createElement(
+                'p',
+                { className: 'message' },
                 message.message
               )
             );
@@ -12844,7 +12880,8 @@ var Routes = function (_Component) {
           _reactRouterDom.Switch,
           null,
           _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _components.Main }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/chatRoom/:roomId', component: _components.ChatRoom })
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/chatRoom/:roomId', component: _components.ChatRoom }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/', component: _components.Main })
         )
       );
     }
@@ -12911,14 +12948,14 @@ var showMessage = exports.showMessage = function showMessage(messageDetails) {
     var message = messageDetails.message;
 
 
-    var delayExp = /\/delay/g;
-    var hop = /\/hop/g;
+    var delayExp = /\/delay/ig;
+    var hop = /\/hop/ig;
     var command = message.match(delayExp) || message.match(hop);
 
     if (!command) {
       _socket2.default.emit('new-message', messageDetails);
       dispatch(displayMessage(messageDetails));
-    } else if (command[0] === '/delay') {
+    } else if (command[0].toLowerCase() === '/delay') {
       var messageSub = message.substr(message.indexOf(' ') + 1);
       var duration = messageSub.substr(0, messageSub.indexOf(' ') + 1);
       var messageString = messageSub.substr(messageSub.indexOf(' ') + 1);
@@ -12929,7 +12966,7 @@ var showMessage = exports.showMessage = function showMessage(messageDetails) {
         dispatch(displayMessage(updatedMessage));
         _socket2.default.emit('new-message', updatedMessage);
       }, Number(duration));
-    } else if (command[0] === '/hop') {
+    } else if (command[0].toLowerCase() === '/hop') {
       dispatch((0, _user.hopPair)(messageDetails));
     }
   };
@@ -12941,6 +12978,7 @@ var getMessages = exports.getMessages = function getMessages() {
   };
 };
 
+// REDUCER
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { allMessages: [] };
   var action = arguments[1];
@@ -18507,7 +18545,7 @@ exports = module.exports = __webpack_require__(427)();
 
 
 // module
-exports.push([module.i, "body {\n  font-family: 'Roboto', sans-serif; }\n  body a {\n    text-decoration: none; }\n  body label {\n    display: block;\n    background-color: black;\n    color: white;\n    padding: 10px;\n    border-radius: 8px;\n    font-size: 16px; }\n  body nav a {\n    display: inline-block;\n    margin: 1em; }\n  body form div {\n    margin: 1em;\n    display: inline-block; }\n  body input {\n    height: 50px;\n    width: 100%;\n    padding: 12px;\n    margin: 8px 0;\n    display: inline;\n    border: 1px solid #ccc;\n    border-radius: 4px 0 0 4px;\n    box-sizing: border-box;\n    border-color: white;\n    font-size: 1em;\n    color: darkgrey;\n    outline-width: 0; }\n  body svg {\n    position: absolute;\n    bottom: 0;\n    width: 100%;\n    height: 60px; }\n  body ul {\n    list-style-type: none; }\n\n::placeholder {\n  opacity: 1;\n  color: darkgrey; }\n\n.form-control {\n  grid-column: 1;\n  align-content: center;\n  margin: auto;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  color: #30415D; }\n\n.submit-button {\n  background-color: #30415D;\n  border-color: #30415D;\n  font-size: 16px;\n  text-align: center;\n  color: white;\n  height: 50px;\n  width: 150px;\n  border-radius: 0 8px 8px 0;\n  margin: auto;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  grid-column: 2;\n  transition: all 1s ease;\n  -moz-transition: all 1s ease;\n  -webkit-transition: all 1s ease;\n  outline-width: 0;\n  margin-left: 0; }\n\n.submit-button:hover {\n  border-radius: 0 50px 50px 0;\n  background-color: #8EAEBD;\n  border-color: #8EAEBD; }\n\n.chat-message-list {\n  width: 100%;\n  grid-column: 2;\n  grid-row: 1;\n  overflow: scroll; }\n\n.chat-message-entry {\n  grid-column: 2;\n  grid-row: 2;\n  padding: 50px; }\n\n.chat-box {\n  display: grid;\n  grid-template-columns: .5fr 1fr .5fr;\n  grid-template-rows: 1fr .2fr;\n  width: 100vw;\n  height: 100vh; }\n\n.chat-button {\n  background-color: #30415D;\n  border-color: #30415D;\n  font-size: 16px;\n  text-align: center;\n  color: white;\n  height: 50px;\n  width: 100%;\n  border-radius: 0 8px 8px 0;\n  margin: auto;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  grid-column: 2;\n  transition: all 1s ease;\n  -moz-transition: all 1s ease;\n  -webkit-transition: all 1s ease;\n  outline-width: 0;\n  margin-left: 0;\n  grid-column: 2; }\n\n.chat-button:hover {\n  background-color: #8EAEBD;\n  border-color: #8EAEBD; }\n\n.chat-button:disabled {\n  background-color: lightgrey;\n  border-color: lightgrey; }\n\n.overlay {\n  grid-column: 2;\n  grid-row: 1;\n  text-align: center;\n  background-color: #8EAEBD;\n  opacity: 0.8;\n  color: black;\n  font-size: 20px;\n  margin: auto;\n  height: 100px;\n  width: 400px;\n  padding: 20px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  border-radius: 20px 0 30px 0; }\n\n#live-chat {\n  grid-column: 2;\n  grid-row: 2;\n  width: 100%; }\n\n#form-and-button-container {\n  display: grid;\n  grid-template-columns: 1fr .2fr; }\n\n#welcome-message {\n  color: white;\n  padding: 20px;\n  letter-spacing: 0.07em; }\n\n#new-message-form {\n  grid-column: 2;\n  grid-row: 2; }\n\n#polygon-container {\n  display: grid;\n  grid-template-columns: .5fr 1fr .5fr;\n  grid-template-rows: repeat(3, 1fr);\n  position: relative;\n  height: 600px;\n  background-image: linear-gradient(#13547a, #80d0c7); }\n", ""]);
+exports.push([module.i, "body {\n  font-family: 'Roboto', sans-serif; }\n  body a {\n    text-decoration: none; }\n  body label {\n    display: block;\n    background-color: black;\n    color: white;\n    padding: 10px;\n    border-radius: 8px;\n    font-size: 16px; }\n  body nav a {\n    display: inline-block;\n    margin: 1em; }\n  body form div {\n    margin: 1em;\n    display: inline-block; }\n  body input {\n    height: 50px;\n    width: 100%;\n    padding: 12px;\n    margin: 8px 0;\n    display: inline;\n    border: 1px solid #ccc;\n    border-radius: 4px 0 0 4px;\n    box-sizing: border-box;\n    border-color: white;\n    font-size: 1em;\n    color: darkgrey;\n    outline-width: 0; }\n  body svg {\n    position: absolute;\n    bottom: 0;\n    width: 100%;\n    height: 60px; }\n  body ul {\n    list-style-type: none;\n    padding: 0; }\n\n::placeholder {\n  opacity: 1;\n  color: darkgrey; }\n\n.form-control {\n  grid-column: 1;\n  align-content: center;\n  margin: auto;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  color: #30415D; }\n\n.submit-button {\n  background-color: #30415D;\n  border-color: #30415D;\n  font-size: 16px;\n  text-align: center;\n  color: white;\n  height: 50px;\n  width: 150px;\n  border-radius: 0 8px 8px 0;\n  margin: auto;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  grid-column: 2;\n  transition: all 1s ease;\n  -moz-transition: all 1s ease;\n  -webkit-transition: all 1s ease;\n  outline-width: 0;\n  margin-left: 0; }\n\n.submit-button:hover {\n  border-radius: 0 50px 50px 0;\n  background-color: #8EAEBD;\n  border-color: #8EAEBD; }\n\n.chat-message-list {\n  width: 100%;\n  grid-column: 2;\n  grid-row: 1;\n  overflow: scroll; }\n\n.chat-message-entry {\n  grid-column: 2;\n  grid-row: 2;\n  padding: 50px; }\n\n.chat-box {\n  display: grid;\n  grid-template-columns: .5fr 1fr .5fr;\n  grid-template-rows: 1fr .2fr;\n  width: 100vw;\n  height: 100vh; }\n\n.chat-button {\n  background-color: #30415D;\n  border-color: #30415D;\n  font-size: 16px;\n  text-align: center;\n  color: white;\n  height: 50px;\n  width: 100%;\n  border-radius: 0 8px 8px 0;\n  margin: auto;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  grid-column: 2;\n  transition: all 0.5s ease;\n  -moz-transition: all 0.5s ease;\n  -webkit-transition: all 0.5s ease;\n  outline-width: 0;\n  margin-left: 0;\n  grid-column: 2; }\n\n.chat-button:hover {\n  background-color: #8EAEBD;\n  border-color: #8EAEBD; }\n\n.chat-button:disabled {\n  background-color: lightgrey;\n  border-color: lightgrey; }\n\n.overlay {\n  grid-column: 2;\n  grid-row: 1;\n  text-align: center;\n  background-color: #8EAEBD;\n  opacity: 0.8;\n  color: black;\n  font-size: 20px;\n  margin: auto;\n  height: 100px;\n  width: 400px;\n  padding: 20px;\n  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);\n  border-radius: 20px 0 30px 0; }\n\n.chat-list-primary {\n  text-align: left;\n  margin-left: 0;\n  margin-right: auto;\n  border-radius: 8px;\n  background-color: #D1E7E8;\n  border-style: solid;\n  border-width: 0px 0px 0px 10px;\n  border-color: #2A3953;\n  width: 60%; }\n\n.chat-list-secondary {\n  text-align: right;\n  margin-right: 0;\n  margin-left: auto;\n  border-radius: 8px;\n  background-color: #E7EDF0;\n  border-style: solid;\n  border-width: 0px 10px 0px 0px;\n  border-color: #2A3953;\n  width: 60%; }\n\n.time {\n  font-size: 10px;\n  color: darkgrey;\n  margin: 5px; }\n\n.message {\n  padding: 5px; }\n\n.user {\n  margin-right: 5px; }\n\n.chat-avatar-image {\n  margin-top: 5px; }\n\n#live-chat {\n  grid-column: 2;\n  grid-row: 2;\n  width: 100%; }\n\n#form-and-button-container {\n  display: grid;\n  grid-template-columns: 1fr .2fr; }\n\n#welcome-message {\n  color: white;\n  padding: 20px;\n  letter-spacing: 0.07em; }\n\n#new-message-form {\n  grid-column: 2;\n  grid-row: 2; }\n\n#polygon-container {\n  display: grid;\n  grid-template-columns: .5fr 1fr .5fr;\n  grid-template-rows: repeat(3, 1fr);\n  position: relative;\n  height: 600px;\n  background-image: linear-gradient(#13547a, #80d0c7); }\n", ""]);
 
 // exports
 

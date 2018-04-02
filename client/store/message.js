@@ -15,14 +15,14 @@ export const clearMessages = () => ({ type: CLEAR_MESSAGES })
 export const showMessage = (messageDetails) => dispatch => {
   let {message} = messageDetails
 
-  let delayExp = /\/delay/g
-  let hop = /\/hop/g
+  let delayExp = /\/delay/ig
+  let hop = /\/hop/ig
   let command = message.match(delayExp) || message.match(hop)
 
   if (!command) {
     socket.emit('new-message', messageDetails)
     dispatch(displayMessage(messageDetails))
-  } else if (command[0] === '/delay') {
+  } else if (command[0].toLowerCase() === '/delay') {
     let messageSub = message.substr(message.indexOf(' ') + 1)
     let duration = messageSub.substr(0, messageSub.indexOf(' ') + 1)
     let messageString = messageSub.substr(messageSub.indexOf(' ') + 1)
@@ -33,7 +33,7 @@ export const showMessage = (messageDetails) => dispatch => {
       dispatch(displayMessage(updatedMessage))
       socket.emit('new-message', updatedMessage)
     }, Number(duration))
-  } else if (command[0] === '/hop') {
+  } else if (command[0].toLowerCase() === '/hop') {
     dispatch(hopPair(messageDetails))
   }
 }
@@ -42,6 +42,7 @@ export const getMessages = () => dispatch => {
   dispatch(fetchMessages())
 }
 
+// REDUCER
 export default function reducer (state = {allMessages: []}, action) {
   switch (action.type) {
     case POST_MESSAGE:

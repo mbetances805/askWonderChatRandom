@@ -3,13 +3,28 @@ module.exports = (io) => {
   let counter = 0
   let userSocketList = {}
   let partners = {}
-  let pendingUsers = []
+  let usersQueue = []
 
+  // find the paired user in socket room
   const findPair = (roomId, socketId) => {
     for (let key in userSocketList) {
       if (userSocketList[key] === roomId && key !== socketId) {
         return key
       }
+    }
+  }
+
+  // update userSocketList and partners with socketIds and roomId
+  const trackUsersRoom = (roomId, socketId) => {
+    if (!userSocketList[socketId]) {
+      userSocketList[socketId] = roomId
+    }
+
+    if (!partners[roomId]) {
+      partners[roomId] = new Set()
+      partners[roomId].add(socketId)
+    } else {
+      partners[roomId].add(socketId)
     }
   }
 
@@ -27,16 +42,7 @@ module.exports = (io) => {
         counter++
       }
 
-      if (!userSocketList[socket.id]) {
-        userSocketList[socket.id] = roomId
-      }
-
-      if (!partners[roomId]) {
-        partners[roomId] = new Set()
-        partners[roomId].add(socket.id)
-      } else {
-        partners[roomId].add(socket.id)
-      }
+      trackUsersRoom(roomId, socket.id)
 
       let numUsers = partners[roomId].size
 
@@ -45,8 +51,18 @@ module.exports = (io) => {
       } else {
         socket.emit('join-room', userName, true)
       }
+
+      // check if there are any users in the usersQueue to assign as a partner
+      if (numUsers === 1 && usersQueue.length) {
+        let newPartner = usersQueue.shift()
+        io.sockets.connected[newPartner].join(roomId)
+        counter++
+        trackUsersRoom(roomId, newPartner)
+      }
+      console.log('join-room userSocketList', userSocketList)
     })
 
+    // check if user is paired, if so update pairing state to true
     socket.on('check-pairing', (socketId, status) => {
       let roomId = userSocketList[socketId]
       let partnerSocketId = findPair(roomId, socketId)
@@ -58,20 +74,34 @@ module.exports = (io) => {
       }
     })
 
+    // when user types /hop, then update pairing state to false and push users
+    // to the usersQueue for future pairing as new users join chat rooms
     socket.on('hop-pairing', (userName, socketId, status) => {
       let userRoom = userSocketList[socketId]
       let partnerSocketId = findPair(userRoom, socketId)
 
-      pendingUsers.push(socketId)
-      pendingUsers.push(partnerSocketId)
+      usersQueue.push(socketId)
+      usersQueue.push(partnerSocketId)
       socket.broadcast.to(partnerSocketId).emit('hop-pairing', partnerSocketId, false)
       socket.emit('hop-pairing', socketId, false)
+
+      // leave the socket room
+      io.sockets.connected[socketId].leave(userRoom)
+      io.sockets.connected[partnerSocketId].leave(userRoom)
+      delete userSocketList[socketId]
+      delete userSocketList[partnerSocketId]
+      delete partners[userRoom.toString()]
     })
 
+    // post a new message to the appropriate socket room
     socket.on('new-message', (messageDetails) => {
       console.log('room', Number(userSocketList[messageDetails.user.socketId]), 'has a new-message', messageDetails)
       socket.broadcast.to(Number(userSocketList[messageDetails.user.socketId])).emit('new-message', messageDetails)
       console.log('broadcast done')
+    })
+
+    socket.on('disconnect', () => {
+      console.log(`Connection ${socket.id} has left the building`)
     })
   })
 }

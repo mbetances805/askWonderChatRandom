@@ -13,6 +13,7 @@ class Routes extends Component {
         <Switch>
           <Route path='/home' component={Main} />
           <Route path='/chatRoom/:roomId' component={ChatRoom} />
+          <Route path='/' component={Main} />
         </Switch>
       </Router>
     )
