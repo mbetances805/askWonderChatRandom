@@ -28,8 +28,8 @@ socket.on('new-message', messageDetails => {
   console.log('after dispatch')
 })
 
-socket.on('disconnect', () => {
-  console.log('server did disconnect.')
-})
+// socket.on('disconnect', () => {
+//   console.log('server did disconnect.')
+// })
 
 export default socket

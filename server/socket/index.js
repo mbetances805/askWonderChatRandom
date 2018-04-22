@@ -51,7 +51,7 @@ module.exports = (io) => {
       } else {
         socket.emit('join-room', userName, true)
       }
-
+      console.log('join-room usersQueue', usersQueue)
       // check if there are any users in the usersQueue to assign as a partner
       if (numUsers === 1 && usersQueue.length) {
         let newPartner = usersQueue.shift()
@@ -78,29 +78,60 @@ module.exports = (io) => {
     // to the usersQueue for future pairing as new users join chat rooms
     socket.on('hop-pairing', (userName, socketId, status) => {
       let userRoom = userSocketList[socketId]
-      let partnerSocketId = findPair(userRoom, socketId)
+      if (userRoom) {
+        console.log('hop-pairing userRoom', userRoom)
+        let partnerSocketId = findPair(userRoom, socketId)
+        console.log('hop-pairing partnerSocketId', partnerSocketId)
+        console.log('hop-pairing userName', userName)
 
-      usersQueue.push(socketId)
-      usersQueue.push(partnerSocketId)
-      socket.broadcast.to(partnerSocketId).emit('hop-pairing', partnerSocketId, false)
-      socket.emit('hop-pairing', socketId, false)
+        usersQueue.push(socketId)
+        usersQueue.push(partnerSocketId)
 
-      // leave the socket room
-      io.sockets.connected[socketId].leave(userRoom)
-      io.sockets.connected[partnerSocketId].leave(userRoom)
-      delete userSocketList[socketId]
-      delete userSocketList[partnerSocketId]
-      delete partners[userRoom.toString()]
+        console.log('hop-pairing usersQueue', usersQueue)
+        socket.broadcast.to(partnerSocketId).emit('hop-pairing', partnerSocketId, false)
+        socket.emit('hop-pairing', socketId, false)
+
+        // leave the socket room
+        io.sockets.connected[socketId].leave(userRoom)
+        io.sockets.connected[partnerSocketId].leave(userRoom)
+        delete userSocketList[socketId]
+        delete userSocketList[partnerSocketId]
+        delete partners[userRoom.toString()]
+      }
+      console.log('hop-pairing userSocketList', userSocketList)
     })
 
     // post a new message to the appropriate socket room
     socket.on('new-message', (messageDetails) => {
-      console.log('room', Number(userSocketList[messageDetails.user.socketId]), 'has a new-message', messageDetails)
-      socket.broadcast.to(Number(userSocketList[messageDetails.user.socketId])).emit('new-message', messageDetails)
+      console.log('room', Number(userSocketList[messageDetails.user.socketId]),
+        'has a new-message', messageDetails)
+      socket.broadcast.to(Number(userSocketList[messageDetails.user.socketId]))
+        .emit('new-message', messageDetails)
       console.log('broadcast done')
     })
 
+    // on disconnect reassign the user left. Not DRY (very similar to hop-pairing).
+    // Temporary Solution.
     socket.on('disconnect', () => {
+      let socketId = socket.id
+      let userRoom = userSocketList[socketId]
+      if (userRoom) {
+        let partnerSocketId = findPair(userRoom, socketId)
+
+        usersQueue.push(partnerSocketId)
+        socket.broadcast.to(partnerSocketId).emit('hop-pairing', partnerSocketId, false)
+        // socket.emit('disconnect', socketId, false)
+
+        // leave the socket room
+        io.sockets.connected[partnerSocketId].leave(userRoom)
+
+        delete userSocketList[socketId]
+        delete userSocketList[partnerSocketId]
+        delete partners[userRoom.toString()]
+      } else {
+        usersQueue.pop()
+      }
+      console.log('disconnect userSocketList', userSocketList)
       console.log(`Connection ${socket.id} has left the building`)
     })
   })
