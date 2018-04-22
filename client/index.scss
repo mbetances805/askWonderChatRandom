@@ -94,7 +94,8 @@ body {
   width: 100%;
   grid-column: 2;
   grid-row: 1;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .chat-message-entry {
@@ -228,4 +229,38 @@ body {
   position: relative;
   height: 600px;
   background-image: linear-gradient(#13547a, #80d0c7);
+}
+
+@media (max-width: 640px) {
+  #new-message-form {
+    grid-column: 1 /span 3;
+  }
+
+  #welcome-message {
+    font-size: 12px;
+    padding: 2px 2px 2px 20px;
+  }
+
+  .chat-box {
+    width: 100%;
+  }
+
+  .overlay {
+    font-size: 12px;
+    grid-column: 1 /span 3;
+    width: 90%;
+    padding: 10px;
+  }
+
+  .chat-message-entry {
+    grid-column: 1 /span 3;
+  }
+
+  .chat-message-list {
+    grid-column: 1 /span 3;
+  }
+
+  .form-control {
+    font-size: 12px;
+  }
 }
