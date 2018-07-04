@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import store, { displayMessage, updatePairing,
-  hopPairing, clearMessages } from './store'
+  hopPairing, clearMessages, getRoomId } from './store'
 
 const socket = io(window.location.origin)
 
@@ -8,8 +8,9 @@ socket.on('connect', () => {
   console.log('Connected!')
 })
 
-socket.on('join-room', (userName, status) => {
+socket.on('join-room', (userName, status, roomId) => {
   console.log('Joining new room!')
+  store.dispatch(getRoomId(roomId))
 })
 
 socket.on('check-pairing', (socketId, status) => {
@@ -27,9 +28,5 @@ socket.on('new-message', messageDetails => {
   store.dispatch(displayMessage(messageDetails))
   console.log('after dispatch')
 })
-
-// socket.on('disconnect', () => {
-//   console.log('server did disconnect.')
-// })
 
 export default socket

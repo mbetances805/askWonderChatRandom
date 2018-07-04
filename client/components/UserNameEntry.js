@@ -49,7 +49,7 @@ class UserNameEntry extends Component {
               />
               <button className='submit-button' type='submit'>Submit</button>
             </div>
-            <div id='warning'></div>
+            <div id='warning' />
           </form>
         </section>
       </div>
@@ -69,5 +69,5 @@ export default withRouter(connect(mapState, mapDispatch)(UserNameEntry))
 
 // to populate
 UserNameEntry.propTypes = {
-
+  createUser: PropTypes.func.isRequired
 }

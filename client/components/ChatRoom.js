@@ -3,8 +3,14 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { MessageEntry, MessagesList } from './index'
+import { checkPairing } from '../store'
 
 class ChatRoom extends Component {
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.user.room !== this.props.user.room) {
+      this.props.createPair(nextProps.user.room)
+    }
+  }
   render () {
     return (
       <div className='chat-box'>
@@ -27,7 +33,11 @@ const mapState = state => ({
   user: state.user
 })
 
-const mapDispatch = null
+const mapDispatch = dispatch => ({
+  createPair: (roomId) => {
+    dispatch(checkPairing(roomId))
+  }
+})
 
 export default withRouter(connect(mapState, mapDispatch)(ChatRoom))
 
