@@ -31,11 +31,7 @@ module.exports = (io) => {
       let partners = userSocketList[roomId].partnerList
       let numUsers = partners.size
 
-      if (numUsers !== 2) {
-        socket.emit('join-room', userName, roomId)
-      } else {
-        socket.emit('join-room', userName, roomId)
-      }
+      socket.emit('join-room', userName, roomId)
 
       // check if there are any users in the usersQueue to assign as a partner
       if (numUsers === 1 && usersQueue.length) {
