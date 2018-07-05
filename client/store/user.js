@@ -17,7 +17,7 @@ export const hopPairing = (socketId, status) => ({ type: HOP_PAIRING, socketId, 
 export const postUser = (userName) =>
   dispatch => {
     dispatch(createUser(userName))
-    let socketInfo = socket.emit('join-room', userName, false, '')
+    let socketInfo = socket.emit('join-room', userName, '')
     dispatch(getSocketId(socketInfo.id))
   }
 

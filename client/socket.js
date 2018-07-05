@@ -8,7 +8,7 @@ socket.on('connect', () => {
   console.log('Connected!')
 })
 
-socket.on('join-room', (userName, status, roomId) => {
+socket.on('join-room', (userName, roomId) => {
   console.log('Joining new room!')
   store.dispatch(getRoomId(roomId))
 })

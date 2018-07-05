@@ -16,7 +16,7 @@ module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log(`A socket connection to the server has been made: ${socket.id}`)
 
-    socket.on('join-room', (userName, status) => {
+    socket.on('join-room', (userName, room) => {
       if (counter === 2) {
         counter = 0
         roomId++
@@ -32,16 +32,16 @@ module.exports = (io) => {
       let numUsers = partners.size
 
       if (numUsers !== 2) {
-        socket.emit('join-room', userName, false, roomId)
+        socket.emit('join-room', userName, roomId)
       } else {
-        socket.emit('join-room', userName, true, roomId)
+        socket.emit('join-room', userName, roomId)
       }
 
       // check if there are any users in the usersQueue to assign as a partner
       if (numUsers === 1 && usersQueue.length) {
         let newPartner = usersQueue.shift()
         io.sockets.connected[newPartner].join(roomId)
-        socket.broadcast.to(newPartner).emit('join-room', newPartner, true, roomId)
+        socket.broadcast.to(newPartner).emit('join-room', newPartner, roomId)
         counter++
         trackUsersRoom(roomId, newPartner)
       }

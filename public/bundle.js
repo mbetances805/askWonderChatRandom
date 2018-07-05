@@ -4276,7 +4276,7 @@ socket.on('connect', function () {
   console.log('Connected!');
 });
 
-socket.on('join-room', function (userName, status, roomId) {
+socket.on('join-room', function (userName, roomId) {
   console.log('Joining new room!');
   _store2.default.dispatch((0, _store.getRoomId)(roomId));
 });
@@ -6790,7 +6790,7 @@ var hopPairing = exports.hopPairing = function hopPairing(socketId, status) {
 var postUser = exports.postUser = function postUser(userName) {
   return function (dispatch) {
     dispatch(createUser(userName));
-    var socketInfo = _socket2.default.emit('join-room', userName, false, '');
+    var socketInfo = _socket2.default.emit('join-room', userName, '');
     dispatch(getSocketId(socketInfo.id));
   };
 };
